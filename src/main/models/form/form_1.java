@@ -1,0 +1,679 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package main.models.form;
+
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import main.chart.ModelChart;
+import main.dao.connexion;
+
+/**
+ *
+ * @author HP
+ */
+public class form_1 extends javax.swing.JPanel {
+Connection con;
+    /**
+     * Creates new form form_1
+     */
+    public form_1() {
+    try {
+        initComponents();
+        int toalh=0;
+                int cptemp=0;
+                int ctpform=0;
+                float couttotal=0;
+                int nbhours=0;
+        con=connexion.seConnecter();
+        Statement s=con.createStatement();
+        
+       ResultSet re= s.executeQuery("select sum(Duree), count(distinct Matricule ),count(distinct Code_Formation ), sum(cout_total),sum(Nb_heurs)  from Formation join Plan_formation using(Code_formation)");
+        if(re.next()){
+            toalh=re.getInt(1);
+            txthrealisation.setText(re.getInt(1)+" H");
+            ctpform=re.getInt(3);
+            cptemp=re.getInt(2);
+            couttotal=re.getFloat(4);
+            nbhours=re.getInt(5);
+        }
+        re.close();
+        
+        re= s.executeQuery("select count(*) from  Employees");
+        if(re.next()){
+            txtsalareforme.setText((100/re.getInt(1))*cptemp+" %");
+            System.out.println((cptemp/100)*re.getInt(1));
+            txtsalare2.setText(cptemp+" sur "+re.getInt(1));
+            txtparticipant.setText(cptemp+"");
+            txtsalare3.setText(txthrealisation.getText()+" Total heures");
+            txtmoyennesalare.setText(toalh/cptemp+" H");
+        }
+        re.close();
+        re= s.executeQuery("select count(*) from  Formation");
+        if(re.next()){
+            progress1.setValue((100/re.getInt(1))*ctpform);
+            System.out.println((ctpform/100)*re.getInt(1));
+        }
+        txtbudgetparticipant.setText(couttotal*0.92+" $");
+        txtbudgeth.setText(Math.round((couttotal*0.92)/nbhours)+" $");
+        txtcoutparticipante.setText(couttotal+" $");
+        txtcouth.setText(Math.round(couttotal/nbhours)+" $");
+    } catch (Exception ex) {
+        Logger.getLogger(form_1.class.getName()).log(Level.SEVERE, null, ex);
+    }
+     init();   
+    }
+private void init(){
+  
+    try {
+        lineChart.addLegend("Class virtuelle", new Color(12, 84, 175), new Color(0, 108, 247));
+        lineChart.addLegend("E-Learning", new Color(54, 4, 143), new Color(104, 49, 200));
+        lineChart.addLegend("FInterne", new Color(5, 125, 0), new Color(95, 209, 69));
+        lineChart.addLegend("Intra-entreprise", new Color(186, 37, 37), new Color(241, 100, 120));
+       lineChart.addLegend("Ntra-entreprise", new Color(225, 200, 0),new Color(225, 200, 0));
+       
+        double[] tab= new double[6];
+         double[] tab2= new double[6];
+          double[] tab3= new double[6];
+           double[] tab4= new double[6];
+            double[] tab5= new double[6];
+             double[] tab6= new double[6];
+        con=connexion.seConnecter();
+        Statement s = con.createStatement();
+        
+        ResultSet re= s.executeQuery(" select Type_formation ,sum( decode(to_char(Date_debut,'mm'),01,1,0)) as Jan, sum(decode(to_char(Date_debut,'mm'),02,1,0)) as feb, sum( decode(to_char(Date_debut,'mm'),03,1,0)) as mar, sum( decode(to_char(Date_debut,'mm'),04,1,0)) as apr, sum( decode(to_char(Date_debut,'mm'),05,1,0)) as may, sum( decode(to_char(Date_debut,'mm'),06,1,0)) as jui from Plan_formation join Formation using (Code_formation) group by Type_formation ");
+            int i=0;
+       while(re.next()){
+        if( i<=6){
+            tab[i]=re.getDouble(2);
+            tab2[i]=re.getDouble(3);
+            tab3[i]=re.getDouble(4);
+            tab4[i]=re.getDouble(5);
+            tab5[i]=re.getDouble(6);
+            tab6[i]=re.getDouble(7);
+            System.out.println(tab[i]);
+            i++;
+        }
+        }re.close();
+      lineChart.addData(new ModelChart("January",tab));
+        lineChart.addData(new ModelChart("February",tab2));
+        lineChart.addData(new ModelChart("March", tab3));
+        lineChart.addData(new ModelChart("April",tab4 ));
+        lineChart.addData(new ModelChart("May",tab5));
+        lineChart.addData(new ModelChart("June",tab6 ));
+    } catch (Exception ex) {
+        Logger.getLogger(form_1.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        lineChart.start();
+        progress2.start();
+        progress1.start();
+   
+}
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        borderPane9 = new main.swing.BorderPane();
+        borderPane6 = new main.swing.BorderPane();
+        jLabel6 = new javax.swing.JLabel();
+        txtcoutparticipante = new javax.swing.JLabel();
+        borderPane7 = new main.swing.BorderPane();
+        jLabel7 = new javax.swing.JLabel();
+        txtbudgetparticipant = new javax.swing.JLabel();
+        borderPane8 = new main.swing.BorderPane();
+        jLabel8 = new javax.swing.JLabel();
+        txtbudgeth = new javax.swing.JLabel();
+        borderPane5 = new main.swing.BorderPane();
+        jLabel5 = new javax.swing.JLabel();
+        txtcouth = new javax.swing.JLabel();
+        borderPane10 = new main.swing.BorderPane();
+        borderPane2 = new main.swing.BorderPane();
+        jLabel2 = new javax.swing.JLabel();
+        txtsalareforme = new javax.swing.JLabel();
+        txtsalare2 = new javax.swing.JLabel();
+        borderPane3 = new main.swing.BorderPane();
+        jLabel3 = new javax.swing.JLabel();
+        txtsalare3 = new javax.swing.JLabel();
+        txtparticipant = new javax.swing.JLabel();
+        borderPane1 = new main.swing.BorderPane();
+        txthrealisation = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        borderPane4 = new main.swing.BorderPane();
+        jLabel4 = new javax.swing.JLabel();
+        txtmoyennesalare = new javax.swing.JLabel();
+        borderPane11 = new main.swing.BorderPane();
+        progress1 = new main.swing.progress.Progress();
+        jLabel9 = new javax.swing.JLabel();
+        borderPane12 = new main.swing.BorderPane();
+        progress2 = new main.swing.progress.Progress();
+        jLabel10 = new javax.swing.JLabel();
+        borderPane13 = new main.swing.BorderPane();
+        lineChart = new main.chart.LineChart();
+        jLabel11 = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(0, 0, 0));
+
+        borderPane9.setBackground(new java.awt.Color(51, 51, 51));
+        borderPane9.setPreferredSize(new java.awt.Dimension(600, 300));
+
+        borderPane6.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane6.setName(""); // NOI18N
+        borderPane6.setPreferredSize(new java.awt.Dimension(165, 75));
+
+        jLabel6.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel6.setText("Total Cout");
+
+        txtcoutparticipante.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtcoutparticipante.setForeground(new java.awt.Color(0, 102, 102));
+        txtcoutparticipante.setText("1");
+
+        javax.swing.GroupLayout borderPane6Layout = new javax.swing.GroupLayout(borderPane6);
+        borderPane6.setLayout(borderPane6Layout);
+        borderPane6Layout.setHorizontalGroup(
+            borderPane6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane6Layout.createSequentialGroup()
+                .addGroup(borderPane6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(borderPane6Layout.createSequentialGroup()
+                        .addGap(68, 68, 68)
+                        .addComponent(jLabel6))
+                    .addGroup(borderPane6Layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(txtcoutparticipante, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        borderPane6Layout.setVerticalGroup(
+            borderPane6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane6Layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtcoutparticipante, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 36, Short.MAX_VALUE))
+        );
+
+        borderPane7.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane7.setName(""); // NOI18N
+        borderPane7.setPreferredSize(new java.awt.Dimension(165, 75));
+        borderPane7.setVerifyInputWhenFocusTarget(false);
+
+        jLabel7.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel7.setText("Total Budget");
+
+        txtbudgetparticipant.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtbudgetparticipant.setForeground(new java.awt.Color(0, 102, 102));
+        txtbudgetparticipant.setText("1");
+
+        javax.swing.GroupLayout borderPane7Layout = new javax.swing.GroupLayout(borderPane7);
+        borderPane7.setLayout(borderPane7Layout);
+        borderPane7Layout.setHorizontalGroup(
+            borderPane7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane7Layout.createSequentialGroup()
+                .addGroup(borderPane7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(borderPane7Layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(jLabel7))
+                    .addGroup(borderPane7Layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(txtbudgetparticipant, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        borderPane7Layout.setVerticalGroup(
+            borderPane7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane7Layout.createSequentialGroup()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtbudgetparticipant, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 36, Short.MAX_VALUE))
+        );
+
+        borderPane8.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane8.setName(""); // NOI18N
+        borderPane8.setPreferredSize(new java.awt.Dimension(165, 75));
+
+        jLabel8.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel8.setText("Budget heure");
+
+        txtbudgeth.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtbudgeth.setForeground(new java.awt.Color(0, 102, 102));
+        txtbudgeth.setText("1");
+
+        javax.swing.GroupLayout borderPane8Layout = new javax.swing.GroupLayout(borderPane8);
+        borderPane8.setLayout(borderPane8Layout);
+        borderPane8Layout.setHorizontalGroup(
+            borderPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane8Layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addGroup(borderPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtbudgeth, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addContainerGap())
+        );
+        borderPane8Layout.setVerticalGroup(
+            borderPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane8Layout.createSequentialGroup()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtbudgeth, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 36, Short.MAX_VALUE))
+        );
+
+        borderPane5.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane5.setName(""); // NOI18N
+        borderPane5.setPreferredSize(new java.awt.Dimension(165, 75));
+
+        jLabel5.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel5.setText("Cout heure");
+
+        txtcouth.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtcouth.setForeground(new java.awt.Color(0, 102, 102));
+        txtcouth.setText("1");
+
+        javax.swing.GroupLayout borderPane5Layout = new javax.swing.GroupLayout(borderPane5);
+        borderPane5.setLayout(borderPane5Layout);
+        borderPane5Layout.setHorizontalGroup(
+            borderPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane5Layout.createSequentialGroup()
+                .addGroup(borderPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(borderPane5Layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addComponent(jLabel5))
+                    .addGroup(borderPane5Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(txtcouth, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        borderPane5Layout.setVerticalGroup(
+            borderPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane5Layout.createSequentialGroup()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtcouth, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 36, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout borderPane9Layout = new javax.swing.GroupLayout(borderPane9);
+        borderPane9.setLayout(borderPane9Layout);
+        borderPane9Layout.setHorizontalGroup(
+            borderPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane9Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(borderPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
+        );
+        borderPane9Layout.setVerticalGroup(
+            borderPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane9Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(borderPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(borderPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borderPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borderPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borderPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
+        );
+
+        borderPane10.setBackground(new java.awt.Color(51, 51, 51));
+
+        borderPane2.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane2.setPreferredSize(new java.awt.Dimension(165, 75));
+
+        jLabel2.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel2.setText("Salaré formé");
+
+        txtsalareforme.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtsalareforme.setForeground(new java.awt.Color(0, 102, 102));
+        txtsalareforme.setText("1");
+
+        txtsalare2.setText("h");
+
+        javax.swing.GroupLayout borderPane2Layout = new javax.swing.GroupLayout(borderPane2);
+        borderPane2.setLayout(borderPane2Layout);
+        borderPane2Layout.setHorizontalGroup(
+            borderPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtsalare2)
+                .addGap(47, 47, 47))
+            .addGroup(borderPane2Layout.createSequentialGroup()
+                .addGap(82, 82, 82)
+                .addGroup(borderPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(borderPane2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(txtsalareforme, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(borderPane2Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        borderPane2Layout.setVerticalGroup(
+            borderPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane2Layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtsalareforme, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtsalare2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        borderPane3.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane3.setPreferredSize(new java.awt.Dimension(165, 75));
+
+        jLabel3.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel3.setText("Participantes");
+
+        txtsalare3.setText("h");
+
+        txtparticipant.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtparticipant.setForeground(new java.awt.Color(0, 102, 102));
+        txtparticipant.setText("1");
+
+        javax.swing.GroupLayout borderPane3Layout = new javax.swing.GroupLayout(borderPane3);
+        borderPane3.setLayout(borderPane3Layout);
+        borderPane3Layout.setHorizontalGroup(
+            borderPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(borderPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtsalare3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(borderPane3Layout.createSequentialGroup()
+                        .addGroup(borderPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(borderPane3Layout.createSequentialGroup()
+                                .addComponent(txtparticipant, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(39, 39, 39)))
+                .addGap(42, 42, 42))
+        );
+        borderPane3Layout.setVerticalGroup(
+            borderPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane3Layout.createSequentialGroup()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtparticipant, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtsalare3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        borderPane1.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane1.setMaximumSize(new java.awt.Dimension(165, 75));
+
+        txthrealisation.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txthrealisation.setForeground(new java.awt.Color(0, 102, 102));
+        txthrealisation.setText("1");
+
+        jLabel1.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel1.setText("heures de réalisation");
+
+        javax.swing.GroupLayout borderPane1Layout = new javax.swing.GroupLayout(borderPane1);
+        borderPane1.setLayout(borderPane1Layout);
+        borderPane1Layout.setHorizontalGroup(
+            borderPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane1Layout.createSequentialGroup()
+                .addContainerGap(57, Short.MAX_VALUE)
+                .addGroup(borderPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane1Layout.createSequentialGroup()
+                        .addComponent(txthrealisation, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+        );
+        borderPane1Layout.setVerticalGroup(
+            borderPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txthrealisation, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        borderPane4.setBackground(new java.awt.Color(255, 255, 255));
+        borderPane4.setPreferredSize(new java.awt.Dimension(165, 75));
+
+        jLabel4.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel4.setText("Moyenne de Salaré");
+
+        txtmoyennesalare.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
+        txtmoyennesalare.setForeground(new java.awt.Color(0, 102, 102));
+        txtmoyennesalare.setText("1");
+
+        javax.swing.GroupLayout borderPane4Layout = new javax.swing.GroupLayout(borderPane4);
+        borderPane4.setLayout(borderPane4Layout);
+        borderPane4Layout.setHorizontalGroup(
+            borderPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane4Layout.createSequentialGroup()
+                .addGroup(borderPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(borderPane4Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(borderPane4Layout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(txtmoyennesalare, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        borderPane4Layout.setVerticalGroup(
+            borderPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane4Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtmoyennesalare, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout borderPane10Layout = new javax.swing.GroupLayout(borderPane10);
+        borderPane10.setLayout(borderPane10Layout);
+        borderPane10Layout.setHorizontalGroup(
+            borderPane10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane10Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(borderPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))
+        );
+        borderPane10Layout.setVerticalGroup(
+            borderPane10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane10Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(borderPane10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(borderPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borderPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                    .addComponent(borderPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                    .addComponent(borderPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30))
+        );
+
+        borderPane11.setBackground(new java.awt.Color(51, 51, 51));
+
+        progress1.setBorder(null);
+        progress1.setForeground(new java.awt.Color(0, 0, 204));
+
+        jLabel9.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Réalisé & Planifié");
+
+        javax.swing.GroupLayout borderPane11Layout = new javax.swing.GroupLayout(borderPane11);
+        borderPane11.setLayout(borderPane11Layout);
+        borderPane11Layout.setHorizontalGroup(
+            borderPane11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane11Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane11Layout.createSequentialGroup()
+                .addComponent(progress1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        borderPane11Layout.setVerticalGroup(
+            borderPane11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane11Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progress1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
+        );
+
+        borderPane12.setBackground(new java.awt.Color(51, 51, 51));
+
+        progress2.setBorder(null);
+        progress2.setForeground(new java.awt.Color(204, 0, 204));
+        progress2.setValue(92);
+
+        jLabel10.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Budget vs cout");
+
+        javax.swing.GroupLayout borderPane12Layout = new javax.swing.GroupLayout(borderPane12);
+        borderPane12.setLayout(borderPane12Layout);
+        borderPane12Layout.setHorizontalGroup(
+            borderPane12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane12Layout.createSequentialGroup()
+                .addContainerGap(23, Short.MAX_VALUE)
+                .addGroup(borderPane12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progress2, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane12Layout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+        borderPane12Layout.setVerticalGroup(
+            borderPane12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progress2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(87, Short.MAX_VALUE))
+        );
+
+        borderPane13.setBackground(new java.awt.Color(51, 51, 51));
+
+        jLabel11.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel11.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel11.setText("     Evoluation de Nombre des salaré formé ans des dérnier 6 mois");
+        jLabel11.setOpaque(true);
+
+        javax.swing.GroupLayout borderPane13Layout = new javax.swing.GroupLayout(borderPane13);
+        borderPane13.setLayout(borderPane13Layout);
+        borderPane13Layout.setHorizontalGroup(
+            borderPane13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borderPane13Layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(borderPane13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(borderPane13Layout.createSequentialGroup()
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(52, 52, 52))
+                    .addGroup(borderPane13Layout.createSequentialGroup()
+                        .addComponent(lineChart, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+        borderPane13Layout.setVerticalGroup(
+            borderPane13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borderPane13Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lineChart, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(borderPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(borderPane13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(borderPane12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(borderPane10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(borderPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 1214, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(borderPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(borderPane13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(borderPane12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(borderPane11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(borderPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private main.swing.BorderPane borderPane1;
+    private main.swing.BorderPane borderPane10;
+    private main.swing.BorderPane borderPane11;
+    private main.swing.BorderPane borderPane12;
+    private main.swing.BorderPane borderPane13;
+    private main.swing.BorderPane borderPane2;
+    private main.swing.BorderPane borderPane3;
+    private main.swing.BorderPane borderPane4;
+    private main.swing.BorderPane borderPane5;
+    private main.swing.BorderPane borderPane6;
+    private main.swing.BorderPane borderPane7;
+    private main.swing.BorderPane borderPane8;
+    private main.swing.BorderPane borderPane9;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private main.chart.LineChart lineChart;
+    private main.swing.progress.Progress progress1;
+    private main.swing.progress.Progress progress2;
+    private javax.swing.JLabel txtbudgeth;
+    private javax.swing.JLabel txtbudgetparticipant;
+    private javax.swing.JLabel txtcouth;
+    private javax.swing.JLabel txtcoutparticipante;
+    private javax.swing.JLabel txthrealisation;
+    private javax.swing.JLabel txtmoyennesalare;
+    private javax.swing.JLabel txtparticipant;
+    private javax.swing.JLabel txtsalare2;
+    private javax.swing.JLabel txtsalare3;
+    private javax.swing.JLabel txtsalareforme;
+    // End of variables declaration//GEN-END:variables
+}
